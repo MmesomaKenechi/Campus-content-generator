@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#15171c" />
+  <title>Campus Content Generator</title>
+  <link rel="manifest" href="/manifest.json" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #15171c;
+      color: #e8e6e3;
+      min-height: 100vh;
+      padding: 20px;
+      line-height: 1.5;
+    }
+    .container { max-width: 500px; margin: 0 auto; }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 6px;
+      color: #e8e6e3;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .subtitle { font-size: 14px; color: #8a8d96; margin-bottom: 24px; }
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: #b8b5b0;
+      font-weight: 500;
+    }
+    select, input, textarea {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 18px;
+      background: #1d2027;
+      border: 1px solid #2a2e37;
+      border-radius: 10px;
+      color: #e8e6e3;
+      font-size: 15px;
+      font-family: inherit;
+      transition: border-color 0.15s;
+    }
+    select:focus, input:focus, textarea:focus {
+      outline: none;
+      border-color: #a855f7;
+    }
+
+    /* MAIN GENERATE BUTTON — GRADIENT */
+    button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.1s, opacity 0.15s;
+      box-shadow: 0 4px 14px rgba(168, 85, 247, 0.25);
+    }
+    button:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .hidden { display: none; }
+    .output-section {
+      background: #1d2027;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+      border: 1px solid #2a2e37;
+    }
+    .output-section h3 {
+      font-size: 12px;
+      color: #a855f7;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+    .post-item {
+      background: #15171c;
+      border-radius: 8px;
+      padding: 14px;
+      padding-right: 70px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      white-space: pre-wrap;
+      position: relative;
+      border: 1px solid #2a2e37;
+      line-height: 1.6;
+    }
+
+    /* COPY BUTTON — ORANGE */
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #f97316;
+      color: #15171c;
+      border: none;
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      width: auto;
+      font-weight: 700;
+      box-shadow: none;
+    }
+    .copy-btn:active { background: #ea580c; transform: scale(0.95); }
+
+    /* BACK BUTTON — OUTLINE STYLE */
+    .back-btn {
+      background: transparent;
+      color: #8a8d96;
+      border: 1px solid #2a2e37;
+      margin-top: 12px;
+      font-weight: 500;
+      box-shadow: none;
+    }
+    .back-btn:active { transform: scale(0.98); }
+
+    .paywall {
+      text-align: center;
+      padding: 40px 24px;
+      background: #1d2027;
+      border-radius: 16px;
+      border: 1px solid #2a2e37;
+    }
+    .paywall h2 {
+      font-size: 22px;
+      margin-bottom: 12px;
+      color: #e8e6e3;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .paywall p { color: #8a8d96; margin-bottom: 24px; font-size: 15px; }
+
+    /* PAYWALL BUTTON — ROSE */
+    .paywall a {
+      display: inline-block;
+      background: #fb7185;
+      color: #15171c;
+      padding: 16px 32px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(251, 113, 133, 0.25);
+    }
+    .paywall a:active { transform: scale(0.98); }
+
+    .loading { text-align: center; padding: 40px; color: #8a8d96; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- SCREEN 1: FORM -->
+    <div id="form-screen">
+      <h1>Campus Content Generator</h1>
+      <p class="subtitle">Posts and scripts that actually sound like you.</p>
+
+      <label>What do you do?</label>
+      <select id="userType">
+        <option value="seller">Student Seller</option>
+        <option value="creator">Content Creator</option>
+      </select>
+
+      <div id="seller-fields">
+        <label>What do you sell?</label>
+        <input type="text" id="product" placeholder="e.g. thrift tops, skincare, phones" />
+
+        <label>Price (optional)</label>
+        <input type="text" id="price" placeholder="e.g. ₦3,500 each" />
+
+        <label>Who is your customer?</label>
+        <input type="text" id="audience" placeholder="e.g. broke undergraduates, guys who want clean skin" />
+      </div>
+
+      <div id="creator-fields" class="hidden">
+        <label>What is your niche?</label>
+        <input type="text" id="niche" placeholder="e.g. comedy, fashion, fitness, lifestyle" />
+
+        <label>What is this content about?</label>
+        <input type="text" id="topic" placeholder="e.g. how to style thrift on a budget" />
+
+        <label>Platform</label>
+        <select id="platform">
+          <option value="TikTok">TikTok</option>
+          <option value="YouTube">YouTube</option>
+          <option value="Instagram">Instagram</option>
+          <option value="all three">All three</option>
+        </select>
+      </div>
+
+      <label>Tone</label>
+      <select id="tone">
+        <option value="Casual">Casual</option>
+        <option value="Urgent">Urgent</option>
+        <option value="Funny">Funny</option>
+        <option value="Premium">Premium</option>
+      </select>
+
+      <button id="generateBtn" onclick="generate()">Generate</button>
+    </div>
+
+    <!-- SCREEN 2: LOADING -->
+    <div id="loading-screen" class="hidden">
+      <div class="loading">
+        <p>Writing your content...</p>
+        <p style="font-size: 13px; margin-top: 8px;">This takes a few seconds.</p>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: OUTPUT -->
+    <div id="output-screen" class="hidden">
+      <h1>Your Content</h1>
+      <p class="subtitle">Tap copy on anything you want to use.</p>
+      <div id="output-content"></div>
+      <button class="back-btn" onclick="goBack()">Generate more</button>
+    </div>
+
+    <!-- SCREEN 4: PAYWALL -->
+    <div id="paywall-screen" class="hidden">
+      <div class="paywall">
+        <h2>You've used your 3 free generations</h2>
+        <p>Unlock 30 more posts and scripts for ₦1,500/month.</p>
+        <a href="YOUR_PAYSTACK_LINK_HERE" target="_blank">Pay ₦1,500</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const FREE_LIMIT = 3;
+    let usageCount = parseInt(localStorage.getItem("usageCount") || "0");
+
+    document.getElementById("userType").addEventListener("change", function() {
+      const sellerFields = document.getElementById("seller-fields");
+      const creatorFields = document.getElementById("creator-fields");
+      if (this.value === "seller") {
+        sellerFields.classList.remove("hidden");
+        creatorFields.classList.add("hidden");
+      } else {
+        sellerFields.classList.add("hidden");
+        creatorFields.classList.remove("hidden");
+      }
+    });
+
+    function showScreen(id) {
+      ["form-screen", "loading-screen", "output-screen", "paywall-screen"].forEach(s => {
+        document.getElementById(s).classList.add("hidden");
+      });
+      document.getElementById(id).classList.remove("hidden");
+    }
+
+    function goBack() {
+      showScreen("form-screen");
+    }
+
+    async function generate() {
+      if (usageCount >= FREE_LIMIT) {
+        showScreen("paywall-screen");
+        return;
+      }
+
+      const userType = document.getElementById("userType").value;
+      const tone = document.getElementById("tone").value;
+
+      let payload = { type: userType, tone: tone };
+
+      if (userType === "seller") {
+        payload.product = document.getElementById("product").value.trim();
+        payload.price = document.getElementById("price").value.trim();
+        payload.audience = document.getElementById("audience").value.trim();
+        if (!payload.product || !payload.audience) {
+          alert("Please fill in what you sell and who your customer is.");
+          return;
+        }
+      } else {
+        payload.niche = document.getElementById("niche").value.trim();
+        payload.topic = document.getElementById("topic").value.trim();
+        payload.platform = document.getElementById("platform").value;
+        if (!payload.niche || !payload.topic) {
+          alert("Please fill in your niche and what the content is about.");
+          return;
+        }
+      }
+
+      showScreen("loading-screen");
+
+      try {
+        const res = await fetch("/api/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error("Generation failed");
+
+        const data = await res.json();
+        renderOutput(data.content);
+
+        usageCount++;
+        localStorage.setItem("usageCount", usageCount.toString());
+
+        showScreen("output-screen");
+      } catch (err) {
+        alert("Something went wrong. Please try again.");
+        showScreen("form-screen");
+      }
+    }
+
+    function renderOutput(content) {
+      const container = document.getElementById("output-content");
+      container.innerHTML = "";
+
+      const sections = content.split(/\n(?=[A-Z][A-Z\s]+:)/);
+
+      sections.forEach(section => {
+        const lines = section.trim().split("\n");
+        if (lines.length === 0) return;
+
+        const header = lines[0].replace(":", "").trim();
+        const body = lines.slice(1).join("\n").trim();
+
+        if (!body) return;
+
+        const div = document.createElement("div");
+        div.className = "output-section";
+
+        const h3 = document.createElement("h3");
+        h3.textContent = header;
+        div.appendChild(h3);
+
+        const items = body.split(/\n(?=\d+\.\s)/).filter(i => i.trim());
+
+        items.forEach(item => {
+          const itemDiv = document.createElement("div");
+          itemDiv.className = "post-item";
+          itemDiv.textContent = item.replace(/^\d+\.\s*/, "").trim();
+
+          const copyBtn = document.createElement("button");
+          copyBtn.className = "copy-btn";
+          copyBtn.textContent = "Copy";
+          copyBtn.onclick = () => {
+            navigator.clipboard.writeText(itemDiv.textContent);
+            copyBtn.textContent = "Copied!";
+            setTimeout(() => copyBtn.textContent = "Copy", 1500);
+          };
+
+          itemDiv.appendChild(copyBtn);
+          div.appendChild(itemDiv);
+        });
+
+        container.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
