@@ -48,8 +48,6 @@
       outline: none;
       border-color: #a855f7;
     }
-
-    /* MAIN GENERATE BUTTON — GRADIENT */
     button {
       width: 100%;
       padding: 16px;
@@ -61,7 +59,7 @@
       font-weight: 700;
       cursor: pointer;
       font-family: inherit;
-      transition: transform 0.1s, opacity 0.15s;
+      transition: transform 0.1s;
       box-shadow: 0 4px 14px rgba(168, 85, 247, 0.25);
     }
     button:active { transform: scale(0.98); }
@@ -94,8 +92,6 @@
       border: 1px solid #2a2e37;
       line-height: 1.6;
     }
-
-    /* COPY BUTTON — ORANGE */
     .copy-btn {
       position: absolute;
       top: 10px;
@@ -112,8 +108,6 @@
       box-shadow: none;
     }
     .copy-btn:active { background: #ea580c; transform: scale(0.95); }
-
-    /* BACK BUTTON — OUTLINE STYLE */
     .back-btn {
       background: transparent;
       color: #8a8d96;
@@ -123,7 +117,6 @@
       box-shadow: none;
     }
     .back-btn:active { transform: scale(0.98); }
-
     .paywall {
       text-align: center;
       padding: 40px 24px;
@@ -136,11 +129,8 @@
       margin-bottom: 12px;
       color: #e8e6e3;
       font-weight: 700;
-      letter-spacing: -0.3px;
     }
     .paywall p { color: #8a8d96; margin-bottom: 24px; font-size: 15px; }
-
-    /* PAYWALL BUTTON — ROSE */
     .paywall a {
       display: inline-block;
       background: #fb7185;
@@ -151,15 +141,12 @@
       font-weight: 700;
       box-shadow: 0 4px 14px rgba(251, 113, 133, 0.25);
     }
-    .paywall a:active { transform: scale(0.98); }
-
     .loading { text-align: center; padding: 40px; color: #8a8d96; }
   </style>
 </head>
 <body>
   <div class="container">
 
-    <!-- SCREEN 1: FORM -->
     <div id="form-screen">
       <h1>Campus Content Generator</h1>
       <p class="subtitle">Posts and scripts that actually sound like you.</p>
@@ -183,7 +170,7 @@
 
       <div id="creator-fields" class="hidden">
         <label>What is your niche?</label>
-        <input type="text" id="niche" placeholder="e.g. comedy, fashion, fitness, lifestyle" />
+        <input type="text" id="niche" placeholder="e.g. comedy, fashion, fitness" />
 
         <label>What is this content about?</label>
         <input type="text" id="topic" placeholder="e.g. how to style thrift on a budget" />
@@ -208,7 +195,6 @@
       <button id="generateBtn" onclick="generate()">Generate</button>
     </div>
 
-    <!-- SCREEN 2: LOADING -->
     <div id="loading-screen" class="hidden">
       <div class="loading">
         <p>Writing your content...</p>
@@ -216,7 +202,6 @@
       </div>
     </div>
 
-    <!-- SCREEN 3: OUTPUT -->
     <div id="output-screen" class="hidden">
       <h1>Your Content</h1>
       <p class="subtitle">Tap copy on anything you want to use.</p>
@@ -224,7 +209,6 @@
       <button class="back-btn" onclick="goBack()">Generate more</button>
     </div>
 
-    <!-- SCREEN 4: PAYWALL -->
     <div id="paywall-screen" class="hidden">
       <div class="paywall">
         <h2>You've used your 3 free generations</h2>
