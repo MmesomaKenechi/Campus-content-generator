@@ -108,11 +108,11 @@ exports.handler = async (event) => {
     if (!apiKey) {
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: "API key not configured" })
+        body: JSON.stringify({ error: "API key not configured in Netlify" })
       };
     }
 
-    const model = "gemini-2.5-flash-lite";
+    const model = "gemini-2.0-flash";
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
@@ -135,10 +135,11 @@ exports.handler = async (event) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Gemini API error:", errorText);
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: "AI generation failed" })
+        body: JSON.stringify({
+          error: "Gemini says: " + errorText.substring(0, 400)
+        })
       };
     }
 
@@ -148,7 +149,9 @@ exports.handler = async (event) => {
     if (!generatedText) {
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: "No content generated" })
+        body: JSON.stringify({
+          error: "Gemini returned no text. Full response: " + JSON.stringify(data).substring(0, 400)
+        })
       };
     }
 
@@ -158,10 +161,9 @@ exports.handler = async (event) => {
     };
 
   } catch (error) {
-    console.error("Function error:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Something went wrong" })
+      body: JSON.stringify({ error: "Function error: " + error.message })
     };
   }
 };
